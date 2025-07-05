@@ -1,8 +1,18 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import random
 
 app = FastAPI()
+
+# ⭐ AJOUTE BIEN LE MIDDLEWARE JUSTE APRES app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ou ["http://localhost:5173"] si tu veux restreindre
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class PredictionResponse(BaseModel):
     prediction: str
