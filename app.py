@@ -1,18 +1,18 @@
-
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import random
 
 app = FastAPI()
 
-# Autoriser les appels du frontend local
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class PredictionResponse(BaseModel):
+    prediction: str
+    interval: str
 
-@app.get("/predict")
+@app.get("/predict", response_model=PredictionResponse)
 def predict(symbol: str = "EUR/USD", interval: str = "1day"):
-    return {"prediction": "Il y a 65.1% de chances que le taux de change augmente ⬆️."}
+    direction = random.choice(["Hausse", "Baisse"])
+    confidence = round(random.uniform(51, 70), 1)
+    return {
+        "prediction": f"{direction} probable ({confidence}%)",
+        "interval": interval
+    }
